@@ -25,6 +25,7 @@ from datetime import datetime
 from typing import List, Tuple, Optional, Dict
 from pathlib import Path
 
+from dotenv import load_dotenv
 import requests
 from bs4 import BeautifulSoup
 from tqdm import tqdm
@@ -51,26 +52,33 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+# Load environment variables from .env
+load_dotenv(Path(__file__).parent / ".env")
+
 
 # === CONFIGURATION ===
 class Config:
     """Configuration settings for the CDI pipeline."""
 
     # FTP Base URLs
-    MONTHLY_BASE_URL = "https://droughtwatch.icpac.net/ftp/monthly/geotif/"
-    DEKADAL_BASE_URL = "https://droughtwatch.icpac.net/ftp/dekadal/geotif/"
+    MONTHLY_BASE_URL = os.environ.get(
+        "MONTHLY_BASE_URL", "https://droughtwatch.icpac.net/ftp/monthly/geotif/"
+    )
+    DEKADAL_BASE_URL = os.environ.get(
+        "DEKADAL_BASE_URL", "https://droughtwatch.icpac.net/ftp/dekadal/geotif/"
+    )
 
-    # Default paths (can be overridden via arguments)
+    # Default paths (can be overridden via .env)
     BASE_DIR = Path(__file__).parent
-    INPUT_DIR = BASE_DIR / "cdi_input"
-    OUTPUT_DIR = BASE_DIR / "cdi_output"
-    MONTHLY_DIR = BASE_DIR / "cdi_monthly"
-    DEKADAL_DIR = BASE_DIR / "cdi_dekadal"
+    INPUT_DIR = Path(os.environ.get("CDI_INPUT_DIR", BASE_DIR / "cdi_input"))
+    OUTPUT_DIR = Path(os.environ.get("CDI_OUTPUT_DIR", BASE_DIR / "cdi_output"))
+    MONTHLY_DIR = Path(os.environ.get("CDI_MONTHLY_DIR", BASE_DIR / "cdi_monthly"))
+    DEKADAL_DIR = Path(os.environ.get("CDI_DEKADAL_DIR", BASE_DIR / "cdi_dekadal"))
 
     # Shapefile settings
     SHAPEFILE_NAME = "icpac_countries_merged.shp"
-    WATERBODY_SHAPEFILE = "water_bodies.shp"
-    LOGO_PATH = BASE_DIR / "assets" / "ICPAC_LOGO.png"
+    WATERBODY_SHAPEFILE = os.environ.get("WATERBODY_SHAPEFILE", "water_bodies.shp")
+    LOGO_PATH = Path(os.environ.get("ICPAC_LOGO_PATH", BASE_DIR / "assets" / "ICPAC_LOGO.png"))
 
     # CDI Color scheme
     CDI_COLORS = {
