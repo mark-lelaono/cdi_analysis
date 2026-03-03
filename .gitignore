@@ -6,9 +6,16 @@
 *.tiff
 *.csv
 *.png
+*.html
 *.jpg
 *.jpeg
 *.gif
+*.shp
+*.shx
+*.dbf
+*.prj
+*.cpg
+*.zip
 
 # macOS
 .DS_Store
